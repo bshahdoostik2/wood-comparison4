@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>مقایسه رنگ روغن چوب</title>
+  <title>مقایسه رنگ چوب</title>
 
   <style>
     * {
@@ -12,114 +12,133 @@
 
     body {
       margin: 0;
-      padding: 20px;
+      padding: 25px 15px;
       background: #ffffff;
-      color: #222222;
+      color: #262626;
       font-family: Tahoma, Arial, sans-serif;
     }
 
-    .wood-comparison-tool {
+    .wood-tool {
       width: 100%;
-      max-width: 1200px;
+      max-width: 1180px;
       margin: 0 auto;
     }
 
-    .comparison-panel {
+    /* =========================
+       بخش بالایی
+    ========================= */
+    .comparison-section {
+      direction: ltr;
       display: grid;
-      grid-template-columns: 255px minmax(0, 1fr);
+      grid-template-columns: 250px minmax(0, 1fr);
       gap: 28px;
-      padding: 24px;
+      padding: 22px;
       background: #fcfbfa;
-      border: 1px solid #f1efec;
+      border: 1px solid #f0eeec;
       border-radius: 18px;
-      box-shadow: 0 5px 22px rgba(47, 35, 25, 0.06);
+      box-shadow: 0 5px 24px rgba(57, 37, 20, 0.06);
     }
 
+    /* =========================
+       انتخاب نوع چوب
+    ========================= */
     .wood-selector {
-      padding: 10px 20px 16px;
-      border-radius: 14px;
+      direction: rtl;
+      padding: 8px 16px 16px;
       background: #ffffff;
-      box-shadow: 0 8px 22px rgba(52, 35, 21, 0.04);
+      border-radius: 13px;
+      box-shadow: 0 5px 18px rgba(40, 28, 18, 0.04);
     }
 
-    .wood-selector h1 {
-      margin: 0 0 8px;
+    .wood-selector h2 {
+      margin: 0 0 7px;
+      font-size: 19px;
       color: #202020;
-      font-size: 20px;
-      line-height: 1.6;
     }
 
     .wood-selector p {
-      margin: 0 0 15px;
-      color: #666666;
+      margin: 0 0 16px;
+      color: #777;
       font-size: 12px;
     }
 
-    .wood-buttons {
+    .wood-list {
       display: flex;
       flex-direction: column;
       gap: 7px;
     }
 
-    .wood-button {
+    .wood-btn {
       width: 100%;
       min-height: 39px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 10px;
       padding: 5px 8px 5px 12px;
-      border: 1px solid #ddd9d5;
+      border: 1px solid #dedad6;
       border-radius: 7px;
-      background: #ffffff;
-      color: #35312e;
+      background: #fff;
+      color: #38332f;
       cursor: pointer;
       font-family: inherit;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: bold;
-      transition: background 0.2s ease, border-color 0.2s ease;
+      transition: 0.2s ease;
     }
 
-    .wood-button:hover {
-      border-color: #77706a;
+    .wood-btn:hover {
+      border-color: #8a8179;
     }
 
-    .wood-button.active {
-      background: #1e3021;
-      border-color: #1e3021;
-      color: #ffffff;
+    .wood-btn.active {
+      background: #1e3121;
+      border-color: #1e3121;
+      color: #fff;
     }
 
-    .wood-thumbnail {
-      width: 29px;
-      height: 29px;
-      flex: 0 0 29px;
-      border: 1px solid rgba(255, 255, 255, 0.28);
+    .wood-thumb {
+      width: 28px;
+      height: 28px;
+      flex: 0 0 28px;
+      border: 1px solid rgba(0, 0, 0, 0.12);
       border-radius: 50%;
+      background-color: #b88960;
+      background-image: linear-gradient(
+        135deg,
+        #d7b18a,
+        #8f5e3b 48%,
+        #c59a6e
+      );
       background-size: cover;
       background-position: center;
     }
 
-    .wood-button:not(.active) .wood-thumbnail {
-      border-color: rgba(0, 0, 0, 0.08);
+    .wood-btn.active .wood-thumb {
+      border-color: rgba(255, 255, 255, 0.4);
     }
 
-    .compare-area {
+    /* =========================
+       بخش مقایسه قبل و بعد
+    ========================= */
+    .comparison-area {
+      direction: rtl;
       min-width: 0;
     }
 
-    .image-comparison {
+    .comparison-box {
       position: relative;
       width: 100%;
       aspect-ratio: 2.55 / 1;
       overflow: hidden;
       border-radius: 16px;
-      background: #a16c43;
+      background: #a66c41;
       cursor: ew-resize;
       user-select: none;
       touch-action: none;
     }
 
-    .compare-image {
+    .comparison-image {
       position: absolute;
       inset: 0;
       width: 100%;
@@ -129,139 +148,141 @@
       pointer-events: none;
     }
 
+    /*
+      عکس بعد از رنگ شدن از سمت راست نمایش داده می‌شود.
+      مقدار clip-path توسط JavaScript تغییر می‌کند.
+    */
     .after-image {
       clip-path: inset(0 0 0 50%);
     }
 
-    .compare-tag {
+    .compare-label {
       position: absolute;
       top: 16px;
-      z-index: 3;
-      min-width: 55px;
+      z-index: 4;
+      min-width: 54px;
       padding: 8px 13px;
       border-radius: 5px;
       text-align: center;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: bold;
       pointer-events: none;
     }
 
-    .before-tag {
-      right: 18px;
+    .label-before {
+      left: 18px;
       background: #ffffff;
-      color: #222222;
+      color: #242424;
     }
 
-    .after-tag {
-      left: 18px;
-      background: #17301e;
+    .label-after {
+      right: 18px;
+      background: #19301e;
       color: #ffffff;
     }
 
-    .slider-line {
+    .comparison-line {
       position: absolute;
       top: 0;
       bottom: 0;
       left: 50%;
-      z-index: 4;
+      z-index: 5;
       width: 3px;
       background: #ffffff;
       transform: translateX(-50%);
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
       pointer-events: none;
-      box-shadow: 0 0 4px rgba(0, 0, 0, 0.18);
     }
 
-    .slider-handle {
+    .comparison-handle {
       position: absolute;
       top: 50%;
       left: 50%;
-      z-index: 5;
+      z-index: 6;
       display: flex;
       align-items: center;
       justify-content: center;
       width: 48px;
       height: 48px;
-      border: 1px solid #e3e0db;
+      border: 1px solid #e1ded9;
       border-radius: 50%;
       background: #ffffff;
-      color: #242424;
-      font-size: 29px;
+      color: #282828;
+      font-size: 25px;
       font-weight: bold;
       transform: translate(-50%, -50%);
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
       pointer-events: none;
-      box-shadow: 0 3px 9px rgba(0, 0, 0, 0.14);
     }
 
-    .slider-handle span {
-      position: relative;
-      top: -2px;
-      letter-spacing: 1px;
-    }
-
-    .compare-hint {
-      margin: 11px 0 0;
-      color: #5e5b57;
+    .comparison-help {
+      margin: 10px 0 0;
+      color: #706b65;
       text-align: center;
       font-size: 11px;
     }
 
-    .color-panel {
+    /* =========================
+       بخش انتخاب رنگ
+    ========================= */
+    .colors-section {
+      direction: ltr;
       display: grid;
       grid-template-columns: 280px minmax(0, 1fr);
-      gap: 34px;
+      gap: 36px;
       align-items: center;
-      margin-top: 25px;
-      padding: 0 8px;
+      margin-top: 26px;
+      padding: 0 7px;
     }
 
-    .waterproof-image {
+    .water-image {
       width: 100%;
       aspect-ratio: 1.75 / 1;
       overflow: hidden;
       border-radius: 13px;
-      background-color: #8d5c38;
+      background-color: #9a6843;
+      background-image: linear-gradient(135deg, #d2a16d, #73401e);
       background-size: cover;
       background-position: center;
-      box-shadow: 0 5px 14px rgba(48, 31, 18, 0.12);
+      box-shadow: 0 5px 14px rgba(42, 26, 14, 0.13);
     }
 
-    .color-selection {
+    .colors-content {
+      direction: rtl;
       min-width: 0;
     }
 
-    .color-title {
+    .colors-title {
       margin-bottom: 22px;
     }
 
-    .color-title h2 {
+    .colors-title h2 {
       margin: 0 0 7px;
+      color: #1d1d1d;
       font-size: 19px;
-      color: #1e1e1e;
     }
 
-    .color-title p {
+    .colors-title p {
       margin: 0;
-      color: #77716c;
+      color: #78716b;
       font-size: 12px;
     }
 
-    .color-buttons {
+    .colors-list {
       display: grid;
-      grid-template-columns: repeat(7, minmax(58px, 1fr));
-      gap: 10px;
-      align-items: start;
+      grid-template-columns: repeat(6, minmax(60px, 1fr));
+      gap: 14px;
     }
 
-    .color-button {
+    .color-btn {
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 9px;
-      min-width: 0;
       padding: 0;
       border: 0;
       background: transparent;
-      color: #48433e;
+      color: #4a4540;
       cursor: pointer;
       font-family: inherit;
       font-size: 12px;
@@ -269,491 +290,498 @@
     }
 
     .color-dot {
-      width: 52px;
-      height: 52px;
-      flex: 0 0 52px;
-      border: 1px solid rgba(0, 0, 0, 0.11);
+      width: 54px;
+      height: 54px;
+      border: 1px solid rgba(0, 0, 0, 0.12);
       border-radius: 50%;
       background-size: cover;
       background-position: center;
-      transition: transform 0.18s ease, outline 0.18s ease;
+      transition: 0.2s ease;
     }
 
-    .color-button:hover .color-dot {
+    .color-btn:hover .color-dot {
       transform: translateY(-3px);
     }
 
-    .color-button.active .color-dot {
-      outline: 2px solid #172d1d;
+    .color-btn.active .color-dot {
+      outline: 2px solid #19301e;
       outline-offset: 3px;
     }
 
     .color-name {
-      display: block;
       text-align: center;
       line-height: 1.5;
     }
 
+    /* =========================
+       موبایل و تبلت
+    ========================= */
     @media (max-width: 850px) {
-      body {
-        padding: 12px;
-      }
-
-      .comparison-panel {
+      .comparison-section {
+        direction: rtl;
         grid-template-columns: 1fr;
         gap: 20px;
         padding: 16px;
       }
 
-      .wood-selector {
-        padding: 14px;
-      }
-
-      .wood-buttons {
+      .wood-list {
         display: grid;
         grid-template-columns: repeat(5, 1fr);
-        gap: 7px;
       }
 
-      .wood-button {
+      .wood-btn {
         min-height: 74px;
         flex-direction: column-reverse;
         justify-content: center;
-        gap: 5px;
-        padding: 8px 4px;
-        font-size: 12px;
+        padding: 7px 4px;
+        font-size: 11px;
       }
 
-      .image-comparison {
+      .comparison-box {
         aspect-ratio: 1.65 / 1;
       }
 
-      .color-panel {
+      .colors-section {
+        direction: rtl;
         grid-template-columns: 1fr;
         gap: 20px;
         padding: 0;
       }
 
-      .waterproof-image {
+      .water-image {
         max-width: 360px;
       }
 
-      .color-buttons {
-        grid-template-columns: repeat(4, 1fr);
-        row-gap: 18px;
+      .colors-list {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px 12px;
       }
     }
 
     @media (max-width: 480px) {
-      .wood-selector h1 {
-        font-size: 17px;
+      body {
+        padding: 12px;
       }
 
-      .wood-buttons {
+      .wood-list {
         grid-template-columns: repeat(3, 1fr);
       }
 
-      .image-comparison {
-        aspect-ratio: 1.2 / 1;
+      .comparison-box {
+        aspect-ratio: 1.18 / 1;
       }
 
-      .compare-tag {
+      .compare-label {
         top: 10px;
         min-width: 44px;
-        padding: 6px 8px;
-        font-size: 12px;
+        padding: 6px 9px;
+        font-size: 11px;
       }
 
-      .before-tag {
-        right: 10px;
-      }
-
-      .after-tag {
+      .label-before {
         left: 10px;
       }
 
-      .slider-handle {
+      .label-after {
+        right: 10px;
+      }
+
+      .comparison-handle {
         width: 43px;
         height: 43px;
-        font-size: 25px;
-      }
-
-      .color-buttons {
-        grid-template-columns: repeat(3, 1fr);
-      }
-
-      .color-dot {
-        width: 48px;
-        height: 48px;
+        font-size: 21px;
       }
     }
   </style>
 </head>
 
 <body>
-  <main class="wood-comparison-tool">
 
-    <section class="comparison-panel">
+  <main class="wood-tool">
+
+    <section class="comparison-section">
 
       <aside class="wood-selector">
-        <h1>تفاوت قبل و بعد را ببینید</h1>
+        <h2>تفاوت قبل و بعد را ببینید</h2>
         <p>نوع چوب را انتخاب کنید</p>
 
-        <div class="wood-buttons">
-          <button class="wood-button active" type="button" data-wood="oak">
+        <div class="wood-list">
+
+          <button class="wood-btn active" type="button" data-wood="oak">
             <span>بلوط</span>
-            <span class="wood-thumbnail" id="thumb-oak"></span>
+            <span class="wood-thumb" id="thumb-oak"></span>
           </button>
 
-          <button class="wood-button" type="button" data-wood="walnut">
+          <button class="wood-btn" type="button" data-wood="walnut">
             <span>گردو</span>
-            <span class="wood-thumbnail" id="thumb-walnut"></span>
+            <span class="wood-thumb" id="thumb-walnut"></span>
           </button>
 
-          <button class="wood-button" type="button" data-wood="beech">
+          <button class="wood-btn" type="button" data-wood="beech">
             <span>راش</span>
-            <span class="wood-thumbnail" id="thumb-beech"></span>
+            <span class="wood-thumb" id="thumb-beech"></span>
           </button>
 
-          <button class="wood-button" type="button" data-wood="thermowood">
+          <button class="wood-btn" type="button" data-wood="thermowood">
             <span>ترمووود</span>
-            <span class="wood-thumbnail" id="thumb-thermowood"></span>
+            <span class="wood-thumb" id="thumb-thermowood"></span>
           </button>
 
-          <button class="wood-button" type="button" data-wood="russian">
+          <button class="wood-btn" type="button" data-wood="russian">
             <span>چوب روسی</span>
-            <span class="wood-thumbnail" id="thumb-russian"></span>
+            <span class="wood-thumb" id="thumb-russian"></span>
           </button>
+
         </div>
       </aside>
 
-      <section class="compare-area">
-        <div class="image-comparison" id="comparisonBox">
-          <div class="compare-image before-image" id="beforeImage"></div>
-          <div class="compare-image after-image" id="afterImage"></div>
+      <section class="comparison-area">
 
-          <span class="compare-tag before-tag">قبل</span>
-          <span class="compare-tag after-tag">بعد</span>
+        <div class="comparison-box" id="comparisonBox">
 
-          <div class="slider-line" id="sliderLine"></div>
+          <div class="comparison-image before-image" id="beforeImage"></div>
+          <div class="comparison-image after-image" id="afterImage"></div>
 
-          <div class="slider-handle" id="sliderHandle">
-            <span>&lsaquo; &rsaquo;</span>
+          <span class="compare-label label-before">قبل</span>
+          <span class="compare-label label-after">بعد</span>
+
+          <div class="comparison-line" id="comparisonLine"></div>
+
+          <div class="comparison-handle" id="comparisonHandle">
+            ‹ ›
           </div>
+
         </div>
 
-        <p class="compare-hint">
-          با حرکت دادن دکمه وسط، تفاوت را مشاهده کنید
+        <p class="comparison-help">
+          با کشیدن دکمه وسط به چپ و راست، تفاوت قبل و بعد را مشاهده کنید.
         </p>
+
       </section>
 
     </section>
 
-    <section class="color-panel">
-      <div class="waterproof-image" id="waterproofImage"></div>
+    <section class="colors-section">
 
-      <div class="color-selection">
-        <div class="color-title">
+      <!-- در صورت داشتن عکس قطره آب، مسیر آن را در جاوااسکریپت وارد کنید -->
+      <div class="water-image" id="waterImage"></div>
+
+      <div class="colors-content">
+
+        <div class="colors-title">
           <h2>انتخاب رنگ</h2>
           <p>رنگ مورد نظر خود را انتخاب کنید</p>
         </div>
 
-        <div class="color-buttons">
-          <button class="color-button active" type="button" data-color="natural">
-            <span class="color-dot" id="color-natural"></span>
+        <div class="colors-list">
+
+          <button class="color-btn active" type="button" data-color="natural">
+            <span class="color-dot" id="dot-natural"></span>
             <span class="color-name">طبیعی</span>
           </button>
 
-          <button class="color-button" type="button" data-color="lightoak">
-            <span class="color-dot" id="color-lightoak"></span>
-            <span class="color-name">بلوط روشن</span>
-          </button>
-
-          <button class="color-button" type="button" data-color="hazelnut">
-            <span class="color-dot" id="color-hazelnut"></span>
+          <button class="color-btn" type="button" data-color="hazelnut">
+            <span class="color-dot" id="dot-hazelnut"></span>
             <span class="color-name">فندقی</span>
           </button>
 
-          <button class="color-button" type="button" data-color="walnut">
-            <span class="color-dot" id="color-walnut"></span>
+          <button class="color-btn" type="button" data-color="walnut">
+            <span class="color-dot" id="dot-walnut"></span>
             <span class="color-name">گردویی</span>
           </button>
 
-          <button class="color-button" type="button" data-color="darkwalnut">
-            <span class="color-dot" id="color-darkwalnut"></span>
-            <span class="color-name">گردویی تیره</span>
+          <button class="color-btn" type="button" data-color="darkbrown">
+            <span class="color-dot" id="dot-darkbrown"></span>
+            <span class="color-name">قهوه‌ای تیره</span>
           </button>
 
-          <button class="color-button" type="button" data-color="charcoal">
-            <span class="color-dot" id="color-charcoal"></span>
-            <span class="color-name">زغالی</span>
+          <button class="color-btn" type="button" data-color="mahogany">
+            <span class="color-dot" id="dot-mahogany"></span>
+            <span class="color-name">ماهاگونی</span>
           </button>
 
-          <button class="color-button" type="button" data-color="black">
-            <span class="color-dot" id="color-black"></span>
+          <button class="color-btn" type="button" data-color="black">
+            <span class="color-dot" id="dot-black"></span>
             <span class="color-name">مشکی</span>
           </button>
+
         </div>
       </div>
+
     </section>
 
   </main>
 
   <script>
+    /*
+    ============================================================
+    مسیر عکس‌های خودتان را فقط در این بخش وارد یا تغییر دهید.
+    ============================================================
+
+    ساختار پیشنهادی پوشه‌ها در گیت‌هاب:
+
+    images/
+      oak/
+        raw.jpg
+        natural.jpg
+        hazelnut.jpg
+        walnut.jpg
+        darkbrown.jpg
+        mahogany.jpg
+        black.jpg
+
+      beech/
+      walnut/
+      russian/
+      thermowood/
+
+    نمونه:
+    images/oak/raw.jpg
+    images/oak/mahogany.jpg
+    */
+
     const woods = {
       oak: {
-        name: "بلوط",
-        base: "#c49a70",
-        grain: "#69442b",
-        seed: 12,
-        grainWidth: 3.5,
-        grainOpacity: 0.60
+        raw: "images/oak/raw.jpg",
+        colors: {
+          natural: "images/oak/natural.jpg",
+          hazelnut: "images/oak/hazelnut.jpg",
+          walnut: "images/oak/walnut.jpg",
+          darkbrown: "images/oak/darkbrown.jpg",
+          mahogany: "images/oak/mahogany.jpg",
+          black: "images/oak/black.jpg"
+        }
       },
-      walnut: {
-        name: "گردو",
-        base: "#84583d",
-        grain: "#392117",
-        seed: 26,
-        grainWidth: 4.2,
-        grainOpacity: 0.64
-      },
+
       beech: {
-        name: "راش",
-        base: "#d3a474",
-        grain: "#8b5a38",
-        seed: 38,
-        grainWidth: 2.3,
-        grainOpacity: 0.37
+        raw: "images/beech/raw.jpg",
+        colors: {
+          natural: "images/beech/natural.jpg",
+          hazelnut: "images/beech/hazelnut.jpg",
+          walnut: "images/beech/walnut.jpg",
+          darkbrown: "images/beech/darkbrown.jpg",
+          mahogany: "images/beech/mahogany.jpg",
+          black: "images/beech/black.jpg"
+        }
       },
-      thermowood: {
-        name: "ترمووود",
-        base: "#754225",
-        grain: "#30170e",
-        seed: 51,
-        grainWidth: 3.8,
-        grainOpacity: 0.66
+
+      walnut: {
+        raw: "images/walnut/raw.jpg",
+        colors: {
+          natural: "images/walnut/natural.jpg",
+          hazelnut: "images/walnut/hazelnut.jpg",
+          walnut: "images/walnut/walnut.jpg",
+          darkbrown: "images/walnut/darkbrown.jpg",
+          mahogany: "images/walnut/mahogany.jpg",
+          black: "images/walnut/black.jpg"
+        }
       },
+
       russian: {
-        name: "چوب روسی",
-        base: "#d5b18a",
-        grain: "#97704e",
-        seed: 67,
-        grainWidth: 2.1,
-        grainOpacity: 0.34
+        raw: "images/russian/raw.jpg",
+        colors: {
+          natural: "images/russian/natural.jpg",
+          hazelnut: "images/russian/hazelnut.jpg",
+          walnut: "images/russian/walnut.jpg",
+          darkbrown: "images/russian/darkbrown.jpg",
+          mahogany: "images/russian/mahogany.jpg",
+          black: "images/russian/black.jpg"
+        }
+      },
+
+      thermowood: {
+        raw: "images/thermowood/raw.jpg",
+        colors: {
+          natural: "images/thermowood/natural.jpg",
+          hazelnut: "images/thermowood/hazelnut.jpg",
+          walnut: "images/thermowood/walnut.jpg",
+          darkbrown: "images/thermowood/darkbrown.jpg",
+          mahogany: "images/thermowood/mahogany.jpg",
+          black: "images/thermowood/black.jpg"
+        }
       }
     };
 
-    const colors = {
-      natural: {
-        name: "طبیعی",
-        color: "#e1b781",
-        opacity: 0.13
-      },
-      lightoak: {
-        name: "بلوط روشن",
-        color: "#b98249",
-        opacity: 0.30
-      },
-      hazelnut: {
-        name: "فندقی",
-        color: "#81502b",
-        opacity: 0.45
-      },
-      walnut: {
-        name: "گردویی",
-        color: "#593019",
-        opacity: 0.57
-      },
-      darkwalnut: {
-        name: "گردویی تیره",
-        color: "#32190d",
-        opacity: 0.65
-      },
-      charcoal: {
-        name: "زغالی",
-        color: "#252728",
-        opacity: 0.72
-      },
-      black: {
-        name: "مشکی",
-        color: "#070707",
-        opacity: 0.85
-      }
+    /*
+      اگر عکس قطره آب روی چوب دارید، آدرس آن را اینجا قرار دهید.
+      مثال:
+      const waterPhoto = "images/oil-water.jpg";
+
+      اگر فعلاً عکس ندارید، مقدار را خالی بگذارید.
+    */
+    const waterPhoto = "";
+
+    const colorFallbacks = {
+      natural: "#d8b083",
+      hazelnut: "#93613a",
+      walnut: "#704222",
+      darkbrown: "#3e2113",
+      mahogany: "#6c2119",
+      black: "#111111"
     };
 
     let selectedWood = "oak";
     let selectedColor = "natural";
     let sliderPosition = 50;
-    let dragging = false;
+    let isDragging = false;
 
     const beforeImage = document.getElementById("beforeImage");
     const afterImage = document.getElementById("afterImage");
-    const sliderLine = document.getElementById("sliderLine");
-    const sliderHandle = document.getElementById("sliderHandle");
     const comparisonBox = document.getElementById("comparisonBox");
-    const waterproofImage = document.getElementById("waterproofImage");
+    const comparisonLine = document.getElementById("comparisonLine");
+    const comparisonHandle = document.getElementById("comparisonHandle");
+    const waterImage = document.getElementById("waterImage");
 
-    function makeWoodTexture(woodKey, colorKey) {
-      const wood = woods[woodKey];
-      const color = colorKey ? colors[colorKey] : null;
-      const canvas = document.createElement("canvas");
-      const context = canvas.getContext("2d");
+    function setImage(element, imagePath, fallbackColor) {
+      element.style.backgroundColor = fallbackColor || "#a56d45";
 
-      canvas.width = 1400;
-      canvas.height = 700;
-
-      context.fillStyle = wood.base;
-      context.fillRect(0, 0, canvas.width, canvas.height);
-
-      function randomValue(seed) {
-        const value = Math.sin(seed) * 10000;
-        return value - Math.floor(value);
+      if (imagePath) {
+        element.style.backgroundImage = "url('" + imagePath + "')";
+      } else {
+        element.style.backgroundImage = "none";
       }
-
-      for (let line = 0; line < 170; line++) {
-        const startY = line * 5 + randomValue(line + wood.seed) * 8;
-        const amplitude = 8 + randomValue(line * 3 + wood.seed) * 24;
-        const wave = 0.003 + randomValue(line * 7 + wood.seed) * 0.012;
-
-        context.beginPath();
-        context.moveTo(0, startY);
-
-        for (let x = 0; x <= canvas.width; x += 12) {
-          const y =
-            startY +
-            Math.sin(x * wave + line) * amplitude +
-            Math.sin(x * wave * 3.1 + line * 2) * (amplitude * 0.28);
-
-          context.lineTo(x, y);
-        }
-
-        context.strokeStyle = wood.grain;
-        context.globalAlpha = wood.grainOpacity * (0.25 + randomValue(line + 100) * 0.75);
-        context.lineWidth = wood.grainWidth * (0.3 + randomValue(line + 300));
-        context.stroke();
-      }
-
-      context.globalAlpha = 0.10;
-      const light = context.createLinearGradient(0, 0, canvas.width, canvas.height);
-      light.addColorStop(0, "#ffffff");
-      light.addColorStop(0.5, "transparent");
-      light.addColorStop(1, "#000000");
-      context.fillStyle = light;
-      context.fillRect(0, 0, canvas.width, canvas.height);
-
-      if (color) {
-        context.globalAlpha = color.opacity;
-        context.fillStyle = color.color;
-        context.fillRect(0, 0, canvas.width, canvas.height);
-      }
-
-      context.globalAlpha = 1;
-      return canvas.toDataURL("image/jpeg", 0.92);
     }
 
     function updateSlider(position) {
       sliderPosition = Math.max(0, Math.min(100, position));
 
-      afterImage.style.clipPath = "inset(0 0 0 " + sliderPosition + "%)";
-      sliderLine.style.left = sliderPosition + "%";
-      sliderHandle.style.left = sliderPosition + "%";
+      /*
+        سمت چپ: قبل از رنگ
+        سمت راست: بعد از رنگ
+      */
+      afterImage.style.clipPath =
+        "inset(0 0 0 " + sliderPosition + "%)";
+
+      comparisonLine.style.left = sliderPosition + "%";
+      comparisonHandle.style.left = sliderPosition + "%";
     }
 
-    function updateImages() {
-      const rawTexture = makeWoodTexture(selectedWood, null);
-      const coloredTexture = makeWoodTexture(selectedWood, selectedColor);
+    function updateComparisonImages() {
+      const wood = woods[selectedWood];
+      const rawImage = wood.raw;
+      const coloredImage = wood.colors[selectedColor];
 
-      beforeImage.style.backgroundImage = "url('" + rawTexture + "')";
-      afterImage.style.backgroundImage = "url('" + coloredTexture + "')";
-      waterproofImage.style.backgroundImage = "url('" + coloredTexture + "')";
+      setImage(beforeImage, rawImage, "#c29a70");
+      setImage(afterImage, coloredImage, colorFallbacks[selectedColor]);
 
       updateSlider(sliderPosition);
     }
 
-    function updateThumbnails() {
+    function updateWoodThumbnails() {
       Object.keys(woods).forEach(function(woodKey) {
-        const thumbnail = document.getElementById("thumb-" + woodKey);
+        const thumb = document.getElementById("thumb-" + woodKey);
 
-        if (thumbnail) {
-          thumbnail.style.backgroundImage =
-            "url('" + makeWoodTexture(woodKey, "natural") + "')";
-        }
-      });
-
-      Object.keys(colors).forEach(function(colorKey) {
-        const colorDot = document.getElementById("color-" + colorKey);
-
-        if (colorDot) {
-          colorDot.style.backgroundImage =
-            "url('" + makeWoodTexture("oak", colorKey) + "')";
+        if (thumb) {
+          thumb.style.backgroundImage =
+            "url('" + woods[woodKey].raw + "')";
         }
       });
     }
 
-    function calculateSliderPosition(event) {
+    function updateColorDots() {
+      Object.keys(colorFallbacks).forEach(function(colorKey) {
+        const dot = document.getElementById("dot-" + colorKey);
+
+        if (dot) {
+          dot.style.backgroundColor = colorFallbacks[colorKey];
+          dot.style.backgroundImage =
+            "url('" + woods[selectedWood].colors[colorKey] + "')";
+        }
+      });
+    }
+
+    function updateWaterImage() {
+      if (waterPhoto) {
+        waterImage.style.backgroundImage = "url('" + waterPhoto + "')";
+      } else {
+        waterImage.style.backgroundImage =
+          "url('" + woods[selectedWood].colors[selectedColor] + "')";
+      }
+    }
+
+    function getSliderPosition(event) {
       const box = comparisonBox.getBoundingClientRect();
-      const clientX = event.touches ? event.touches[0].clientX : event.clientX;
+
+      let clientX = event.clientX;
+
+      if (event.touches && event.touches.length > 0) {
+        clientX = event.touches[0].clientX;
+      }
+
       return ((clientX - box.left) / box.width) * 100;
     }
 
-    document.querySelectorAll(".wood-button").forEach(function(button) {
+    /* انتخاب چوب */
+    document.querySelectorAll(".wood-btn").forEach(function(button) {
       button.addEventListener("click", function() {
         selectedWood = this.dataset.wood;
 
-        document.querySelectorAll(".wood-button").forEach(function(item) {
+        document.querySelectorAll(".wood-btn").forEach(function(item) {
           item.classList.remove("active");
         });
 
         this.classList.add("active");
-        updateImages();
+
+        updateComparisonImages();
+        updateColorDots();
+        updateWaterImage();
       });
     });
 
-    document.querySelectorAll(".color-button").forEach(function(button) {
+    /* انتخاب رنگ */
+    document.querySelectorAll(".color-btn").forEach(function(button) {
       button.addEventListener("click", function() {
         selectedColor = this.dataset.color;
 
-        document.querySelectorAll(".color-button").forEach(function(item) {
+        document.querySelectorAll(".color-btn").forEach(function(item) {
           item.classList.remove("active");
         });
 
         this.classList.add("active");
-        updateImages();
+
+        updateComparisonImages();
+        updateWaterImage();
       });
     });
 
+    /* کشیدن اسلایدر با ماوس */
     comparisonBox.addEventListener("mousedown", function(event) {
-      dragging = true;
-      updateSlider(calculateSliderPosition(event));
+      isDragging = true;
+      updateSlider(getSliderPosition(event));
     });
 
     window.addEventListener("mousemove", function(event) {
-      if (dragging) {
-        updateSlider(calculateSliderPosition(event));
+      if (isDragging) {
+        updateSlider(getSliderPosition(event));
       }
     });
 
     window.addEventListener("mouseup", function() {
-      dragging = false;
+      isDragging = false;
     });
 
+    /* کشیدن اسلایدر در موبایل */
     comparisonBox.addEventListener("touchstart", function(event) {
-      dragging = true;
-      updateSlider(calculateSliderPosition(event));
+      isDragging = true;
+      updateSlider(getSliderPosition(event));
     }, { passive: true });
 
     comparisonBox.addEventListener("touchmove", function(event) {
-      if (dragging) {
-        updateSlider(calculateSliderPosition(event));
+      if (isDragging) {
+        updateSlider(getSliderPosition(event));
       }
     }, { passive: true });
 
     comparisonBox.addEventListener("touchend", function() {
-      dragging = false;
+      isDragging = false;
     });
 
-    updateThumbnails();
-    updateImages();
+    /* اجرای اولیه */
+    updateWoodThumbnails();
+    updateColorDots();
+    updateComparisonImages();
+    updateWaterImage();
   </script>
+
 </body>
 </html>
