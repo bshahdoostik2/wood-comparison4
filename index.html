@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مقایسه رنگ روغن چوب</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #ffffff;
+      color: #222222;
+      font-family: Tahoma, Arial, sans-serif;
+    }
+
+    .wood-comparison-tool {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .comparison-panel {
+      display: grid;
+      grid-template-columns: 255px minmax(0, 1fr);
+      gap: 28px;
+      padding: 24px;
+      background: #fcfbfa;
+      border: 1px solid #f1efec;
+      border-radius: 18px;
+      box-shadow: 0 5px 22px rgba(47, 35, 25, 0.06);
+    }
+
+    .wood-selector {
+      padding: 10px 20px 16px;
+      border-radius: 14px;
+      background: #ffffff;
+      box-shadow: 0 8px 22px rgba(52, 35, 21, 0.04);
+    }
+
+    .wood-selector h1 {
+      margin: 0 0 8px;
+      color: #202020;
+      font-size: 20px;
+      line-height: 1.6;
+    }
+
+    .wood-selector p {
+      margin: 0 0 15px;
+      color: #666666;
+      font-size: 12px;
+    }
+
+    .wood-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .wood-button {
+      width: 100%;
+      min-height: 39px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 5px 8px 5px 12px;
+      border: 1px solid #ddd9d5;
+      border-radius: 7px;
+      background: #ffffff;
+      color: #35312e;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: bold;
+      transition: background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .wood-button:hover {
+      border-color: #77706a;
+    }
+
+    .wood-button.active {
+      background: #1e3021;
+      border-color: #1e3021;
+      color: #ffffff;
+    }
+
+    .wood-thumbnail {
+      width: 29px;
+      height: 29px;
+      flex: 0 0 29px;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      border-radius: 50%;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .wood-button:not(.active) .wood-thumbnail {
+      border-color: rgba(0, 0, 0, 0.08);
+    }
+
+    .compare-area {
+      min-width: 0;
+    }
+
+    .image-comparison {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 2.55 / 1;
+      overflow: hidden;
+      border-radius: 16px;
+      background: #a16c43;
+      cursor: ew-resize;
+      user-select: none;
+      touch-action: none;
+    }
+
+    .compare-image {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      pointer-events: none;
+    }
+
+    .after-image {
+      clip-path: inset(0 0 0 50%);
+    }
+
+    .compare-tag {
+      position: absolute;
+      top: 16px;
+      z-index: 3;
+      min-width: 55px;
+      padding: 8px 13px;
+      border-radius: 5px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: bold;
+      pointer-events: none;
+    }
+
+    .before-tag {
+      right: 18px;
+      background: #ffffff;
+      color: #222222;
+    }
+
+    .after-tag {
+      left: 18px;
+      background: #17301e;
+      color: #ffffff;
+    }
+
+    .slider-line {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      z-index: 4;
+      width: 3px;
+      background: #ffffff;
+      transform: translateX(-50%);
+      pointer-events: none;
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.18);
+    }
+
+    .slider-handle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      border: 1px solid #e3e0db;
+      border-radius: 50%;
+      background: #ffffff;
+      color: #242424;
+      font-size: 29px;
+      font-weight: bold;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      box-shadow: 0 3px 9px rgba(0, 0, 0, 0.14);
+    }
+
+    .slider-handle span {
+      position: relative;
+      top: -2px;
+      letter-spacing: 1px;
+    }
+
+    .compare-hint {
+      margin: 11px 0 0;
+      color: #5e5b57;
+      text-align: center;
+      font-size: 11px;
+    }
+
+    .color-panel {
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      gap: 34px;
+      align-items: center;
+      margin-top: 25px;
+      padding: 0 8px;
+    }
+
+    .waterproof-image {
+      width: 100%;
+      aspect-ratio: 1.75 / 1;
+      overflow: hidden;
+      border-radius: 13px;
+      background-color: #8d5c38;
+      background-size: cover;
+      background-position: center;
+      box-shadow: 0 5px 14px rgba(48, 31, 18, 0.12);
+    }
+
+    .color-selection {
+      min-width: 0;
+    }
+
+    .color-title {
+      margin-bottom: 22px;
+    }
+
+    .color-title h2 {
+      margin: 0 0 7px;
+      font-size: 19px;
+      color: #1e1e1e;
+    }
+
+    .color-title p {
+      margin: 0;
+      color: #77716c;
+      font-size: 12px;
+    }
+
+    .color-buttons {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(58px, 1fr));
+      gap: 10px;
+      align-items: start;
+    }
+
+    .color-button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 9px;
+      min-width: 0;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: #48433e;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .color-dot {
+      width: 52px;
+      height: 52px;
+      flex: 0 0 52px;
+      border: 1px solid rgba(0, 0, 0, 0.11);
+      border-radius: 50%;
+      background-size: cover;
+      background-position: center;
+      transition: transform 0.18s ease, outline 0.18s ease;
+    }
+
+    .color-button:hover .color-dot {
+      transform: translateY(-3px);
+    }
+
+    .color-button.active .color-dot {
+      outline: 2px solid #172d1d;
+      outline-offset: 3px;
+    }
+
+    .color-name {
+      display: block;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 850px) {
+      body {
+        padding: 12px;
+      }
+
+      .comparison-panel {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 16px;
+      }
+
+      .wood-selector {
+        padding: 14px;
+      }
+
+      .wood-buttons {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 7px;
+      }
+
+      .wood-button {
+        min-height: 74px;
+        flex-direction: column-reverse;
+        justify-content: center;
+        gap: 5px;
+        padding: 8px 4px;
+        font-size: 12px;
+      }
+
+      .image-comparison {
+        aspect-ratio: 1.65 / 1;
+      }
+
+      .color-panel {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 0;
+      }
+
+      .waterproof-image {
+        max-width: 360px;
+      }
+
+      .color-buttons {
+        grid-template-columns: repeat(4, 1fr);
+        row-gap: 18px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .wood-selector h1 {
+        font-size: 17px;
+      }
+
+      .wood-buttons {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .image-comparison {
+        aspect-ratio: 1.2 / 1;
+      }
+
+      .compare-tag {
+        top: 10px;
+        min-width: 44px;
+        padding: 6px 8px;
+        font-size: 12px;
+      }
+
+      .before-tag {
+        right: 10px;
+      }
+
+      .after-tag {
+        left: 10px;
+      }
+
+      .slider-handle {
+        width: 43px;
+        height: 43px;
+        font-size: 25px;
+      }
+
+      .color-buttons {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .color-dot {
+        width: 48px;
+        height: 48px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="wood-comparison-tool">
+
+    <section class="comparison-panel">
+
+      <aside class="wood-selector">
+        <h1>تفاوت قبل و بعد را ببینید</h1>
+        <p>نوع چوب را انتخاب کنید</p>
+
+        <div class="wood-buttons">
+          <button class="wood-button active" type="button" data-wood="oak">
+            <span>بلوط</span>
+            <span class="wood-thumbnail" id="thumb-oak"></span>
+          </button>
+
+          <button class="wood-button" type="button" data-wood="walnut">
+            <span>گردو</span>
+            <span class="wood-thumbnail" id="thumb-walnut"></span>
+          </button>
+
+          <button class="wood-button" type="button" data-wood="beech">
+            <span>راش</span>
+            <span class="wood-thumbnail" id="thumb-beech"></span>
+          </button>
+
+          <button class="wood-button" type="button" data-wood="thermowood">
+            <span>ترمووود</span>
+            <span class="wood-thumbnail" id="thumb-thermowood"></span>
+          </button>
+
+          <button class="wood-button" type="button" data-wood="russian">
+            <span>چوب روسی</span>
+            <span class="wood-thumbnail" id="thumb-russian"></span>
+          </button>
+        </div>
+      </aside>
+
+      <section class="compare-area">
+        <div class="image-comparison" id="comparisonBox">
+          <div class="compare-image before-image" id="beforeImage"></div>
+          <div class="compare-image after-image" id="afterImage"></div>
+
+          <span class="compare-tag before-tag">قبل</span>
+          <span class="compare-tag after-tag">بعد</span>
+
+          <div class="slider-line" id="sliderLine"></div>
+
+          <div class="slider-handle" id="sliderHandle">
+            <span>&lsaquo; &rsaquo;</span>
+          </div>
+        </div>
+
+        <p class="compare-hint">
+          با حرکت دادن دکمه وسط، تفاوت را مشاهده کنید
+        </p>
+      </section>
+
+    </section>
+
+    <section class="color-panel">
+      <div class="waterproof-image" id="waterproofImage"></div>
+
+      <div class="color-selection">
+        <div class="color-title">
+          <h2>انتخاب رنگ</h2>
+          <p>رنگ مورد نظر خود را انتخاب کنید</p>
+        </div>
+
+        <div class="color-buttons">
+          <button class="color-button active" type="button" data-color="natural">
+            <span class="color-dot" id="color-natural"></span>
+            <span class="color-name">طبیعی</span>
+          </button>
+
+          <button class="color-button" type="button" data-color="lightoak">
+            <span class="color-dot" id="color-lightoak"></span>
+            <span class="color-name">بلوط روشن</span>
+          </button>
+
+          <button class="color-button" type="button" data-color="hazelnut">
+            <span class="color-dot" id="color-hazelnut"></span>
+            <span class="color-name">فندقی</span>
+          </button>
+
+          <button class="color-button" type="button" data-color="walnut">
+            <span class="color-dot" id="color-walnut"></span>
+            <span class="color-name">گردویی</span>
+          </button>
+
+          <button class="color-button" type="button" data-color="darkwalnut">
+            <span class="color-dot" id="color-darkwalnut"></span>
+            <span class="color-name">گردویی تیره</span>
+          </button>
+
+          <button class="color-button" type="button" data-color="charcoal">
+            <span class="color-dot" id="color-charcoal"></span>
+            <span class="color-name">زغالی</span>
+          </button>
+
+          <button class="color-button" type="button" data-color="black">
+            <span class="color-dot" id="color-black"></span>
+            <span class="color-name">مشکی</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    const woods = {
+      oak: {
+        name: "بلوط",
+        base: "#c49a70",
+        grain: "#69442b",
+        seed: 12,
+        grainWidth: 3.5,
+        grainOpacity: 0.60
+      },
+      walnut: {
+        name: "گردو",
+        base: "#84583d",
+        grain: "#392117",
+        seed: 26,
+        grainWidth: 4.2,
+        grainOpacity: 0.64
+      },
+      beech: {
+        name: "راش",
+        base: "#d3a474",
+        grain: "#8b5a38",
+        seed: 38,
+        grainWidth: 2.3,
+        grainOpacity: 0.37
+      },
+      thermowood: {
+        name: "ترمووود",
+        base: "#754225",
+        grain: "#30170e",
+        seed: 51,
+        grainWidth: 3.8,
+        grainOpacity: 0.66
+      },
+      russian: {
+        name: "چوب روسی",
+        base: "#d5b18a",
+        grain: "#97704e",
+        seed: 67,
+        grainWidth: 2.1,
+        grainOpacity: 0.34
+      }
+    };
+
+    const colors = {
+      natural: {
+        name: "طبیعی",
+        color: "#e1b781",
+        opacity: 0.13
+      },
+      lightoak: {
+        name: "بلوط روشن",
+        color: "#b98249",
+        opacity: 0.30
+      },
+      hazelnut: {
+        name: "فندقی",
+        color: "#81502b",
+        opacity: 0.45
+      },
+      walnut: {
+        name: "گردویی",
+        color: "#593019",
+        opacity: 0.57
+      },
+      darkwalnut: {
+        name: "گردویی تیره",
+        color: "#32190d",
+        opacity: 0.65
+      },
+      charcoal: {
+        name: "زغالی",
+        color: "#252728",
+        opacity: 0.72
+      },
+      black: {
+        name: "مشکی",
+        color: "#070707",
+        opacity: 0.85
+      }
+    };
+
+    let selectedWood = "oak";
+    let selectedColor = "natural";
+    let sliderPosition = 50;
+    let dragging = false;
+
+    const beforeImage = document.getElementById("beforeImage");
+    const afterImage = document.getElementById("afterImage");
+    const sliderLine = document.getElementById("sliderLine");
+    const sliderHandle = document.getElementById("sliderHandle");
+    const comparisonBox = document.getElementById("comparisonBox");
+    const waterproofImage = document.getElementById("waterproofImage");
+
+    function makeWoodTexture(woodKey, colorKey) {
+      const wood = woods[woodKey];
+      const color = colorKey ? colors[colorKey] : null;
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
+
+      canvas.width = 1400;
+      canvas.height = 700;
+
+      context.fillStyle = wood.base;
+      context.fillRect(0, 0, canvas.width, canvas.height);
+
+      function randomValue(seed) {
+        const value = Math.sin(seed) * 10000;
+        return value - Math.floor(value);
+      }
+
+      for (let line = 0; line < 170; line++) {
+        const startY = line * 5 + randomValue(line + wood.seed) * 8;
+        const amplitude = 8 + randomValue(line * 3 + wood.seed) * 24;
+        const wave = 0.003 + randomValue(line * 7 + wood.seed) * 0.012;
+
+        context.beginPath();
+        context.moveTo(0, startY);
+
+        for (let x = 0; x <= canvas.width; x += 12) {
+          const y =
+            startY +
+            Math.sin(x * wave + line) * amplitude +
+            Math.sin(x * wave * 3.1 + line * 2) * (amplitude * 0.28);
+
+          context.lineTo(x, y);
+        }
+
+        context.strokeStyle = wood.grain;
+        context.globalAlpha = wood.grainOpacity * (0.25 + randomValue(line + 100) * 0.75);
+        context.lineWidth = wood.grainWidth * (0.3 + randomValue(line + 300));
+        context.stroke();
+      }
+
+      context.globalAlpha = 0.10;
+      const light = context.createLinearGradient(0, 0, canvas.width, canvas.height);
+      light.addColorStop(0, "#ffffff");
+      light.addColorStop(0.5, "transparent");
+      light.addColorStop(1, "#000000");
+      context.fillStyle = light;
+      context.fillRect(0, 0, canvas.width, canvas.height);
+
+      if (color) {
+        context.globalAlpha = color.opacity;
+        context.fillStyle = color.color;
+        context.fillRect(0, 0, canvas.width, canvas.height);
+      }
+
+      context.globalAlpha = 1;
+      return canvas.toDataURL("image/jpeg", 0.92);
+    }
+
+    function updateSlider(position) {
+      sliderPosition = Math.max(0, Math.min(100, position));
+
+      afterImage.style.clipPath = "inset(0 0 0 " + sliderPosition + "%)";
+      sliderLine.style.left = sliderPosition + "%";
+      sliderHandle.style.left = sliderPosition + "%";
+    }
+
+    function updateImages() {
+      const rawTexture = makeWoodTexture(selectedWood, null);
+      const coloredTexture = makeWoodTexture(selectedWood, selectedColor);
+
+      beforeImage.style.backgroundImage = "url('" + rawTexture + "')";
+      afterImage.style.backgroundImage = "url('" + coloredTexture + "')";
+      waterproofImage.style.backgroundImage = "url('" + coloredTexture + "')";
+
+      updateSlider(sliderPosition);
+    }
+
+    function updateThumbnails() {
+      Object.keys(woods).forEach(function(woodKey) {
+        const thumbnail = document.getElementById("thumb-" + woodKey);
+
+        if (thumbnail) {
+          thumbnail.style.backgroundImage =
+            "url('" + makeWoodTexture(woodKey, "natural") + "')";
+        }
+      });
+
+      Object.keys(colors).forEach(function(colorKey) {
+        const colorDot = document.getElementById("color-" + colorKey);
+
+        if (colorDot) {
+          colorDot.style.backgroundImage =
+            "url('" + makeWoodTexture("oak", colorKey) + "')";
+        }
+      });
+    }
+
+    function calculateSliderPosition(event) {
+      const box = comparisonBox.getBoundingClientRect();
+      const clientX = event.touches ? event.touches[0].clientX : event.clientX;
+      return ((clientX - box.left) / box.width) * 100;
+    }
+
+    document.querySelectorAll(".wood-button").forEach(function(button) {
+      button.addEventListener("click", function() {
+        selectedWood = this.dataset.wood;
+
+        document.querySelectorAll(".wood-button").forEach(function(item) {
+          item.classList.remove("active");
+        });
+
+        this.classList.add("active");
+        updateImages();
+      });
+    });
+
+    document.querySelectorAll(".color-button").forEach(function(button) {
+      button.addEventListener("click", function() {
+        selectedColor = this.dataset.color;
+
+        document.querySelectorAll(".color-button").forEach(function(item) {
+          item.classList.remove("active");
+        });
+
+        this.classList.add("active");
+        updateImages();
+      });
+    });
+
+    comparisonBox.addEventListener("mousedown", function(event) {
+      dragging = true;
+      updateSlider(calculateSliderPosition(event));
+    });
+
+    window.addEventListener("mousemove", function(event) {
+      if (dragging) {
+        updateSlider(calculateSliderPosition(event));
+      }
+    });
+
+    window.addEventListener("mouseup", function() {
+      dragging = false;
+    });
+
+    comparisonBox.addEventListener("touchstart", function(event) {
+      dragging = true;
+      updateSlider(calculateSliderPosition(event));
+    }, { passive: true });
+
+    comparisonBox.addEventListener("touchmove", function(event) {
+      if (dragging) {
+        updateSlider(calculateSliderPosition(event));
+      }
+    }, { passive: true });
+
+    comparisonBox.addEventListener("touchend", function() {
+      dragging = false;
+    });
+
+    updateThumbnails();
+    updateImages();
+  </script>
+</body>
+</html>
